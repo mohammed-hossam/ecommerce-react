@@ -1,7 +1,10 @@
 import React, { useState } from 'react';
-import PreviewCollection from '../../components/previewCollection/PreviewCollection';
-const SHOP_DATA = [
-  {
+
+import { Route } from 'react-router-dom';
+import OverviewCollection from '../../components/overviewCollection/OverviewCollection';
+import Collection from '../collection/Collection';
+const SHOP_DATA = {
+  hats: {
     id: 1,
     title: 'Hats',
     routeName: 'hats',
@@ -62,7 +65,7 @@ const SHOP_DATA = [
       },
     ],
   },
-  {
+  sneakers: {
     id: 2,
     title: 'Sneakers',
     routeName: 'sneakers',
@@ -117,7 +120,7 @@ const SHOP_DATA = [
       },
     ],
   },
-  {
+  jackets: {
     id: 3,
     title: 'Jackets',
     routeName: 'jackets',
@@ -137,7 +140,7 @@ const SHOP_DATA = [
       {
         id: 20,
         name: 'Grey Jean Jacket',
-        imageUrl: 'https://i.ibb.co/N71k1ML/grey-jean-jacket.png',
+        imageUrl: 'https://i.ibb.co/XzcwL5s/black-shearling.png',
         price: 90,
       },
       {
@@ -154,7 +157,7 @@ const SHOP_DATA = [
       },
     ],
   },
-  {
+  womens: {
     id: 4,
     title: 'Womens',
     routeName: 'womens',
@@ -162,48 +165,48 @@ const SHOP_DATA = [
       {
         id: 23,
         name: 'Blue Tanktop',
-        imageUrl: 'https://i.ibb.co/7CQVJNm/blue-tank.png',
+        imageUrl: 'https://i.ibb.co/M6hHc3F/brown-trench.png',
         price: 25,
       },
       {
         id: 24,
         name: 'Floral Blouse',
-        imageUrl: 'https://i.ibb.co/4W2DGKm/floral-blouse.png',
+        imageUrl: 'https://i.ibb.co/s96FpdP/brown-shearling.png',
         price: 20,
       },
       {
         id: 25,
         name: 'Floral Dress',
-        imageUrl: 'https://i.ibb.co/KV18Ysr/floral-skirt.png',
+        imageUrl: 'https://i.ibb.co/w4k6Ws9/nike-funky.png',
         price: 80,
       },
       {
         id: 26,
         name: 'Red Dots Dress',
-        imageUrl: 'https://i.ibb.co/N3BN1bh/red-polka-dot-dress.png',
+        imageUrl: 'https://i.ibb.co/VpW4x5t/roll-up-jean-shirt.png',
         price: 80,
       },
       {
         id: 27,
         name: 'Striped Sweater',
-        imageUrl: 'https://i.ibb.co/KmSkMbH/striped-sweater.png',
+        imageUrl: 'https://i.ibb.co/M6hHc3F/brown-trench.png',
         price: 45,
       },
       {
         id: 28,
         name: 'Yellow Track Suit',
-        imageUrl: 'https://i.ibb.co/v1cvwNf/yellow-track-suit.png',
+        imageUrl: 'https://i.ibb.co/55z32tw/long-sleeve.png',
         price: 135,
       },
       {
         id: 29,
         name: 'White Blouse',
-        imageUrl: 'https://i.ibb.co/qBcrsJg/white-vest.png',
+        imageUrl: 'https://i.ibb.co/xJS0T3Y/camo-vest.png',
         price: 20,
       },
     ],
   },
-  {
+  mens: {
     id: 5,
     title: 'Mens',
     routeName: 'mens',
@@ -246,18 +249,20 @@ const SHOP_DATA = [
       },
     ],
   },
-];
+};
 
-function Shop() {
+function Shop(props) {
   const data = SHOP_DATA;
   const [collections, setcollections] = useState(data);
   return (
     <div className="shop-page">
-      {collections.map((el) => {
-        return (
-          <PreviewCollection key={el.id} items={el.items} title={el.title} />
-        );
-      })}
+      <Route exact path={`${props.match.path}`}>
+        <OverviewCollection collections={collections} />
+      </Route>
+
+      <Route path={`${props.match.path}/:collectionId`}>
+        <Collection collections={collections} />
+      </Route>
     </div>
   );
 }

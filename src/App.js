@@ -1,14 +1,16 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 import './App.css';
 import HomePage from './pages/homepage/HomePage';
-import { Route, BrowserRouter, Switch } from 'react-router-dom';
+import { Route, BrowserRouter, Switch, Redirect } from 'react-router-dom';
 import Shop from './pages/shop/Shop';
 import Header from './components/header/Header';
 import SigninAndSignup from './pages/signin-signup/Signin-signup';
 import { auth, createUserinDataBase } from './firebase/firebase.utils';
+import { connect } from 'react-redux';
+import { setCurrentUser } from './redux/user/userActions';
+import Checkout from './pages/checkout/Checkout';
 
-function App() {
-  const [currentUser, setCurrentUser] = useState(null);
+function App({ currentUser, setCurrentUser }) {
   let unsubscribeFromAuth;
 
   useEffect(() => {
@@ -33,18 +35,25 @@ function App() {
     };
   }, []);
 
-  console.log(currentUser);
-
   return (
     <BrowserRouter>
-      <Header currentUser={currentUser} />
+      <Header />
       <Switch>
         <Route exact path="/" component={HomePage} />
-        <Route exact path="/shop" component={Shop} />
-        <Route exact path="/signin" component={SigninAndSignup} />
+        <Route path="/shop" component={Shop} />
+        <Route
+          exact
+          path="/signin"
+          render={() =>
+            currentUser ? <Redirect to="/" /> : <SigninAndSignup />
+          }
+        />
+        <Route exact path="/checkout" component={Checkout} />
       </Switch>
     </BrowserRouter>
   );
 }
-
-export default App;
+function mapStateToProps(state, ownProps) {
+  return { currentUser: state.userData.currentUser };
+}
+export default connect(mapStateToProps, { setCurrentUser })(App);
