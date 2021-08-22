@@ -1,6 +1,5 @@
 import React from 'react';
 import './overviewCollection.scss';
-import { connect } from 'react-redux';
 import PreviewCollection from '../previewCollection/PreviewCollection';
 
 function OverviewCollection({ collections }) {
