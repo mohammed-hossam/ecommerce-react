@@ -4,7 +4,7 @@ import { Route } from 'react-router-dom';
 import OverviewCollection from '../../components/overviewCollection/OverviewCollection';
 import Collection from '../collection/Collection';
 import { connect } from 'react-redux';
-import { fetchCollectionStartAsync } from '../../redux/shop/shopActions';
+import { fetchCollectionStart } from '../../redux/shop/shopActions';
 // const SHOP_DATA = {
 //   hats: {
 //     id: 1,
@@ -254,23 +254,28 @@ import { fetchCollectionStartAsync } from '../../redux/shop/shopActions';
 // };
 const OverviewCollectionWithSpinner = WithSpinner(OverviewCollection);
 const CollectionWithSpinner = WithSpinner(Collection);
-function Shop({ collections, isLoading, fetchCollectionStartAsync, ...props }) {
+function Shop({
+  collections,
+  iscollectionsExists,
+  fetchCollectionStart,
+  ...props
+}) {
   useEffect(() => {
-    fetchCollectionStartAsync();
+    fetchCollectionStart();
   }, []);
 
   return (
     <div className="shop-page">
       <Route exact path={`${props.match.path}`}>
         <OverviewCollectionWithSpinner
-          isLoading={isLoading}
+          isLoading={iscollectionsExists}
           collections={collections}
         />
       </Route>
 
       <Route path={`${props.match.path}/:collectionId`}>
         <CollectionWithSpinner
-          isLoading={isLoading}
+          isLoading={iscollectionsExists}
           collections={collections}
         />
       </Route>
@@ -280,7 +285,7 @@ function Shop({ collections, isLoading, fetchCollectionStartAsync, ...props }) {
 function mapStateToProps(state, ownProps) {
   return {
     collections: state.shopData.collections,
-    isLoading: state.shopData.isLoading,
+    iscollectionsExists: !!state.shopData.collections,
   };
 }
-export default connect(mapStateToProps, { fetchCollectionStartAsync })(Shop);
+export default connect(mapStateToProps, { fetchCollectionStart })(Shop);

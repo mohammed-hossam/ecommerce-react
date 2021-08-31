@@ -5,7 +5,6 @@ import { useHistory } from 'react-router-dom';
 
 function PreviewCollection({ items, title }) {
   const history = useHistory();
-  console.log();
   return (
     <div className="collection-preview">
       <h1

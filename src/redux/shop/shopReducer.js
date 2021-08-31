@@ -1,8 +1,10 @@
-const INITIAL_STATE = { collections: null, isLoading: true, errorMsg: '' };
+const INITIAL_STATE = { collections: null, isLoading: false, errorMsg: '' };
 
 function shopReducer(state = INITIAL_STATE, action) {
   console.log('shopReducer');
   switch (action.type) {
+    case 'FETCH_COLLECTIONS_START':
+      return { ...state, isLoading: true };
     case 'FETCH_COLLECTIONS_SUCCESS':
       return { ...state, isLoading: false, collections: action.payLoad };
     case 'FETCH_COLLECTIONS_FAILURE':
