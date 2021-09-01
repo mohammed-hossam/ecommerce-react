@@ -9,7 +9,7 @@ import logger from 'redux-logger';
 import { createStore, applyMiddleware } from 'redux';
 import reducers from './redux/rootReducer';
 import createSagaMiddleware from 'redux-saga';
-import { fetchCollectionsStartSagaWatcher } from './redux/shop/shopSagas';
+import { rootSaga } from './redux/rootSaga';
 //persist
 import { persistStore } from 'redux-persist';
 import { PersistGate } from 'redux-persist/integration/react';
@@ -21,7 +21,7 @@ if (process.env.NODE_ENV === 'development') {
 }
 
 const store = createStore(reducers, applyMiddleware(...middlewares));
-sagaMiddleware.run(fetchCollectionsStartSagaWatcher);
+sagaMiddleware.run(rootSaga);
 const persistor = persistStore(store);
 
 ReactDOM.render(

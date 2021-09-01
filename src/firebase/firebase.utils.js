@@ -14,8 +14,8 @@ firebase.initializeApp(config);
 
 const db = firebase.firestore();
 const auth = firebase.auth();
-const provider = new firebase.auth.GoogleAuthProvider();
-// provider.setCustomParameters({ prompt: 'select_account' });
+const googleProvider = new firebase.auth.GoogleAuthProvider();
+// googleProvider.setCustomParameters({ prompt: 'select_account' });
 
 const createUserinDataBase = async (userAuth, additionalData) => {
   if (!userAuth) return;
@@ -70,4 +70,4 @@ export const addDataTofetchedCollections = (collections) => {
   }, {});
 };
 
-export { db, auth, provider, createUserinDataBase };
+export { db, auth, googleProvider, createUserinDataBase };

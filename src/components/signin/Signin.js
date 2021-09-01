@@ -2,15 +2,20 @@ import React, { useState } from 'react';
 import './signin.scss';
 import FormInput from '../formInput/FormInput';
 import CustomButton from '../customButton/CustomButton.js';
-import { auth, provider } from '../../firebase/firebase.utils.js';
+import {
+  googleSignInStart,
+  emailSignInStart,
+} from '../../redux/user/userActions';
+import { connect } from 'react-redux';
 
-function Signin() {
+function Signin({ googleSignInStart, emailSignInStart }) {
   const [person, setPerson] = useState({ email: '', password: '' });
 
   async function handleSubmit(e) {
     e.preventDefault();
     try {
-      await auth.signInWithEmailAndPassword(person.email, person.password);
+      console.log(person);
+      emailSignInStart(person);
     } catch (err) {
       console.log(err);
     }
@@ -20,7 +25,7 @@ function Signin() {
     setPerson({ ...person, [name]: value });
   }
   function handleGoogleLogin() {
-    auth.signInWithPopup(provider);
+    googleSignInStart();
   }
   return (
     <div className="sign-in">
@@ -53,4 +58,4 @@ function Signin() {
   );
 }
 
-export default Signin;
+export default connect(null, { googleSignInStart, emailSignInStart })(Signin);
