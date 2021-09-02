@@ -3,8 +3,10 @@ import './signup.scss';
 import { auth, createUserinDataBase } from '../../firebase/firebase.utils';
 import FormInput from '../formInput/FormInput';
 import CustomButton from '../customButton/CustomButton';
+import { connect } from 'react-redux';
+import { signupStart } from '../../redux/user/userActions';
 // i signedup with mohamedguitar@mh.com 478963214
-function Signup() {
+function Signup({ signupStart }) {
   const [person, setPerson] = useState({
     displayName: '',
     email: '',
@@ -19,22 +21,8 @@ function Signup() {
       alert('password dont match');
       return;
     }
-    try {
-      const { user } = await auth.createUserWithEmailAndPassword(
-        email,
-        password
-      );
-      await createUserinDataBase(user, { displayName });
-
-      setPerson({
-        displayName: '',
-        email: '',
-        password: '',
-        confirmPassword: '',
-      });
-    } catch (err) {
-      console.log(err);
-    }
+    //action
+    signupStart(person);
   }
 
   function handleChange(e) {
@@ -88,4 +76,4 @@ function Signup() {
   );
 }
 
-export default Signup;
+export default connect(null, { signupStart })(Signup);

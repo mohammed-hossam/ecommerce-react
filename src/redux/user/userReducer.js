@@ -9,6 +9,7 @@ function userReducer(state = INITIAL_STATE, action) {
     case 'GOOGLE_SIGN_IN_FAILURE':
     case 'EMAIL_SIGN_IN_FAILURE':
     case 'SIGN_OUT_FAILURE':
+    case 'SIGN_UP_FAILURE':
       return { ...state, errorMsg: action.payLoad };
 
     default:

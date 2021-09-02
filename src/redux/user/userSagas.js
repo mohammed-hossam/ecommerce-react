@@ -5,6 +5,8 @@ import {
   googleSignInSuccess,
   signoutFailure,
   signoutSuccess,
+  signupFailure,
+  signupSuccess,
 } from './userActions';
 import { all, call, put, takeLatest } from 'redux-saga/effects';
 import {
@@ -60,6 +62,37 @@ function* emailSignInSagaWorker(action) {
   }
 }
 
+function* signupSagaWorker({
+  payLoad: { displayName, email, password, confirmPassword },
+}) {
+  try {
+    const { user } = yield auth.createUserWithEmailAndPassword(email, password);
+    yield put(signupSuccess(user, { displayName }));
+  } catch (error) {
+    yield put(signupFailure(error));
+  }
+}
+function* signupSucessSagaWorker({ payLoad: { user, additionalData } }) {
+  try {
+    const userRef = yield call(createUserinDataBase, user, additionalData);
+    const userSnapshot = yield userRef.get();
+    yield put(
+      emailSignInSuccess({ id: userSnapshot.id, ...userSnapshot.data() })
+    );
+  } catch (error) {
+    yield put(emailSignInFailure(error));
+  }
+}
+
+function* signoutSagaWorker() {
+  try {
+    yield auth.signOut();
+    yield put(signoutSuccess());
+  } catch (error) {
+    put(signoutFailure(error));
+  }
+}
+
 function* checkUserSessionSagaWorker() {
   try {
     const userAuth = yield new Promise((resolve, reject) => {
@@ -83,15 +116,6 @@ function* checkUserSessionSagaWorker() {
   }
 }
 
-function* signoutSagaWorker() {
-  try {
-    yield auth.signOut();
-    yield put(signoutSuccess());
-  } catch (error) {
-    put(signoutFailure());
-  }
-}
-
 // watchers
 export function* googleSignInStartSagaWatcer() {
   yield takeLatest('GOOGLE_SIGN_IN_START', googleSignInSagaWorker);
@@ -105,6 +129,12 @@ export function* checkUserSessionSagaWatcher() {
 export function* signoutSagaWatcher() {
   yield takeLatest('SIGN_OUT_START', signoutSagaWorker);
 }
+export function* signupStartSagaWatcher() {
+  yield takeLatest('SIGN_UP_START', signupSagaWorker);
+}
+export function* signupSuccessSagaWatcher() {
+  yield takeLatest('SIGN_UP_SUCCESS', signupSucessSagaWorker);
+}
 
 export function* usersSaga() {
   yield all([
@@ -112,8 +142,7 @@ export function* usersSaga() {
     call(emailSignInStartSagaWatcer),
     call(checkUserSessionSagaWatcher),
     call(signoutSagaWatcher),
+    call(signupStartSagaWatcher),
+    call(signupSuccessSagaWatcher),
   ]);
 }
-// SIGN_OUT_START: 'SIGN_OUT_START',
-// SIGN_OUT_SUCCESS: 'SIGN_OUT_SUCCESS',
-// SIGN_OUT_FAILURE: 'SIGN_OUT_FAILURE'

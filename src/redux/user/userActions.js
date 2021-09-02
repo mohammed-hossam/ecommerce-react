@@ -35,6 +35,13 @@ export function checkUserSession() {
   return { type: 'CHECK_USER_SESSION' };
 }
 
-// SIGN_OUT_START: 'SIGN_OUT_START',
-// SIGN_OUT_SUCCESS: 'SIGN_OUT_SUCCESS',
-// SIGN_OUT_FAILURE: 'SIGN_OUT_FAILURE'
+//signup actions
+export function signupStart(person) {
+  return { type: 'SIGN_UP_START', payLoad: person };
+}
+export function signupSuccess(user, additionalData) {
+  return { type: 'SIGN_UP_SUCCESS', payLoad: { user, additionalData } };
+}
+export function signupFailure(err) {
+  return { type: 'SIGN_UP_FAILURE', payLoad: err };
+}

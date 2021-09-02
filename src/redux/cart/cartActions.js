@@ -10,3 +10,8 @@ export function reduceItem(item) {
 export function removeItem(item) {
   return { type: 'REMOVE_ITEM', payLoad: item };
 }
+
+//clear cart action
+export function clearCart() {
+  return { type: 'CLEAR_CART' };
+}

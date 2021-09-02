@@ -22,6 +22,11 @@ export default function cartReducer(state = INITAL_STATE, action) {
           return item.id !== action.payLoad.id;
         }),
       };
+    case 'CLEAR_CART':
+      return {
+        ...state,
+        cartItems: [],
+      };
 
     default:
       return state;
