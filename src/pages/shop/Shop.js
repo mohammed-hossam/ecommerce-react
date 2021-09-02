@@ -1,9 +1,10 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect } from 'react';
 import WithSpinner from '../../components/withSpinner/WithSpinner';
 import { Route } from 'react-router-dom';
 import OverviewCollection from '../../components/overviewCollection/OverviewCollection';
-import { addDataTofetchedCollections, db } from '../../firebase/firebase.utils';
 import Collection from '../collection/Collection';
+import { connect } from 'react-redux';
+import { fetchCollectionStart } from '../../redux/shop/shopActions';
 // const SHOP_DATA = {
 //   hats: {
 //     id: 1,
@@ -253,50 +254,38 @@ import Collection from '../collection/Collection';
 // };
 const OverviewCollectionWithSpinner = WithSpinner(OverviewCollection);
 const CollectionWithSpinner = WithSpinner(Collection);
-function Shop(props) {
-  // const data = SHOP_DATA;
-  const [collections, setcollections] = useState(null);
-  const [isLoading, setIsLoading] = useState(true);
-  let unsubscribeFromSnapShot;
-
+function Shop({
+  collections,
+  iscollectionsExists,
+  fetchCollectionStart,
+  ...props
+}) {
   useEffect(() => {
-    const collectionsRef = db.collection('collections');
-    // promise pattern
-    // collectionsRef.get().then((snapShot) => {
-    //   const collectionsObject = addDataTofetchedCollections(snapShot);
-    //   setcollections(collectionsObject);
-    //   setIsLoading(false);
-    // });
-
-    //oberserver pattern
-    unsubscribeFromSnapShot = collectionsRef.onSnapshot(async (snapShot) => {
-      const collectionsObject = addDataTofetchedCollections(snapShot);
-      setcollections(collectionsObject);
-      setIsLoading(false);
-    });
-
-    return () => {
-      unsubscribeFromSnapShot();
-    };
+    fetchCollectionStart();
   }, []);
 
   return (
     <div className="shop-page">
       <Route exact path={`${props.match.path}`}>
         <OverviewCollectionWithSpinner
-          isLoading={isLoading}
+          isLoading={iscollectionsExists}
           collections={collections}
         />
       </Route>
 
       <Route path={`${props.match.path}/:collectionId`}>
         <CollectionWithSpinner
-          isLoading={isLoading}
+          isLoading={iscollectionsExists}
           collections={collections}
         />
       </Route>
     </div>
   );
 }
-
-export default Shop;
+function mapStateToProps(state, ownProps) {
+  return {
+    collections: state.shopData.collections,
+    iscollectionsExists: !!state.shopData.collections,
+  };
+}
+export default connect(mapStateToProps, { fetchCollectionStart })(Shop);

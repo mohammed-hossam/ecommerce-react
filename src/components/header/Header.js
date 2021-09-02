@@ -6,7 +6,8 @@ import { auth } from '../../firebase/firebase.utils';
 import { connect } from 'react-redux';
 import CartIcon from '../cartIcon/CartIcon';
 import CartDropdown from '../cartDropdown/CartDropdown';
-function Header({ currentUser, cartHidden }) {
+import { signoutStart } from '../../redux/user/userActions';
+function Header({ currentUser, cartHidden, signoutStart }) {
   return (
     <div className="header">
       <Link className="logo-container" to="/">
@@ -23,7 +24,7 @@ function Header({ currentUser, cartHidden }) {
           <div
             className="option"
             onClick={() => {
-              auth.signOut();
+              signoutStart();
             }}
           >
             SIGN OUT
@@ -48,4 +49,4 @@ function mapStateToProps(state, ownProps) {
   };
 }
 
-export default connect(mapStateToProps)(Header);
+export default connect(mapStateToProps, { signoutStart })(Header);
