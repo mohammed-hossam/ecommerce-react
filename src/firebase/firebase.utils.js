@@ -17,6 +17,7 @@ const auth = firebase.auth();
 const googleProvider = new firebase.auth.GoogleAuthProvider();
 // googleProvider.setCustomParameters({ prompt: 'select_account' });
 
+//createUserinDataBase bt3ml 7agtan btcreate el user fl database bt3tna fl firebase lw msh mwgod, w tany 7aga enha btrg3 el docRef(userRef) ll user lw mwogod b7es 2gebo 3nde fl state bta3ty fl redux 2w kda.
 const createUserinDataBase = async (userAuth, additionalData) => {
   if (!userAuth) return;
   const docRef = db.doc(`users/${userAuth.uid}`);
